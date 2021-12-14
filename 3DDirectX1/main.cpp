@@ -20,6 +20,7 @@
 #include"DirectXCommon.h"
 #include"DebugText.h"
 #include"Object3d.h"
+#include"Model.h"
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -33,144 +34,6 @@ using namespace Microsoft::WRL;
 
 
 
-
-#pragma region サウンド関数など
-//チャンクヘッダ
-struct ChunkHeader
-{
-	char id[4];			//チャンク毎のID
-	int32_t size;		//チャンクサイズ
-};
-
-//RIFFヘッダチャンク
-struct RiffHeader
-{
-	ChunkHeader chunk;		//"RIFF"
-	char type[4];			//"WAVE"
-};
-
-//FMIチャンク
-struct FormatChunk
-{
-	ChunkHeader chunk;		//"fmt"
-	WAVEFORMATEX fmt;		//波形フォーマット
-};
-
-//音声データ
-struct SoundData
-{
-	//波形フォーマット
-	WAVEFORMATEX wfex;
-	//バッファの先頭アドレス
-	BYTE* pBuffer;
-	//バッファのサイズ
-	unsigned int bufferSize;
-};
-
-SoundData SoundLoadWave(const char* filename)
-{
-	HRESULT result;
-
-	//1.ファイル読み込み
-
-	std::ifstream file;
-
-	file.open(filename, std::ios_base::binary);
-
-	assert(file.is_open());
-
-	//2.wavデータ読み込み
-
-	RiffHeader riff;
-	file.read((char*)&riff, sizeof(riff));
-
-	if (strncmp(riff.chunk.id, "RIFF", 4) != 0)
-	{
-		assert(0);
-	}
-	if (strncmp(riff.type, "WAVE", 4) != 0)
-	{
-		assert(0);
-	}
-
-	FormatChunk format = {};
-
-	file.read((char*)&format, sizeof(ChunkHeader));
-	if (strncmp(format.chunk.id, "fmt ", 4) != 0)
-	{
-		assert(0);
-	}
-
-
-	assert(format.chunk.size <= sizeof(format.fmt));
-	file.read((char*)&format.fmt, format.chunk.size);
-
-	ChunkHeader data;
-	file.read((char*)&data, sizeof(data));
-
-	if (strncmp(data.id, "JUNK ", 4) == 0)
-	{
-
-		file.seekg(data.size, std::ios_base::cur);
-
-		file.read((char*)&data, sizeof(data));
-	}
-
-	if (strncmp(data.id, "data ", 4) != 0)
-	{
-		assert(0);
-	}
-
-
-	char* pBuffer = new char[data.size];
-	file.read(pBuffer, data.size);
-
-	//3.Waveファイルを閉じる
-	file.close();
-
-	//4.読み込んだデータをreturn
-
-	SoundData soundData = {};
-
-	soundData.wfex = format.fmt;
-	soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
-	soundData.bufferSize = data.size;
-
-	return soundData;
-}
-
-void SoundUnload(SoundData* soundData)
-{
-
-	delete[] soundData->pBuffer;
-
-	soundData->pBuffer = 0;
-	soundData->bufferSize = 0;
-	soundData->wfex = {};
-}
-
-void SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData)
-{
-	HRESULT result;
-
-
-	IXAudio2SourceVoice* pSourceVoice = nullptr;
-	result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex);
-	assert(SUCCEEDED(result));
-
-
-	XAUDIO2_BUFFER buf{};
-	buf.pAudioData = soundData.pBuffer;
-	buf.AudioBytes = soundData.bufferSize;
-	buf.Flags = XAUDIO2_END_OF_STREAM;
-
-
-	result = pSourceVoice->SubmitSourceBuffer(&buf);
-	result = pSourceVoice->Start();
-
-}
-
-#pragma endregion 
 
 
 
@@ -199,6 +62,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Object3d* object3d = nullptr;
 	object3d = new Object3d();
 
+	Model* model = nullptr;
+	model = new Model();
 
 	if (!Sprite::StaticInitialize(dxcommon->Getdev(), WinApp::window_width, WinApp::window_height)) {
 		assert(0);
@@ -211,7 +76,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	// 3Dオブジェクト生成
+	model = model->Create("bullet");
 	object3d = Object3d::Create();
+	object3d->LinkModel(model);
 	object3d->Update();
 
 	// デバッグテキスト用テクスチャ読み込み

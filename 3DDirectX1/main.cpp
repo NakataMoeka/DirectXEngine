@@ -62,8 +62,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Object3d* object3d = nullptr;
 	object3d = new Object3d();
 
+	Object3d* object3d2 = nullptr;
+	object3d2 = new Object3d();
+
 	Model* model = nullptr;
 	model = new Model();
+
+	Model* model2 = nullptr;
+	model2 = new Model();
 
 	if (!Sprite::StaticInitialize(dxcommon->Getdev(), WinApp::window_width, WinApp::window_height)) {
 		assert(0);
@@ -77,9 +83,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// 3Dオブジェクト生成
 	model = model->Create("bullet");
-	object3d = Object3d::Create();
-	object3d->LinkModel(model);
+	object3d = Object3d::Create(model);
+
 	object3d->Update();
+
+	model2 = model2->Create("bullet");
+	object3d2 = Object3d::Create(model);
+
+	object3d2->SetPosition({10.0f, 10.0f, 10.0f});
+	
+	object3d2->Update();
 
 	// デバッグテキスト用テクスチャ読み込み
 	if (!Sprite::LoadTexture(debugTextTexNumber, L"Resources/debugfont.png")) {
@@ -182,6 +195,7 @@ if (winapp->ProcessMessage()) { break; }
 	
 				Object3d::PreDraw(dxcommon->GetCmdList());
 				object3d->Draw();
+				object3d2->Draw();
 				Object3d::PostDraw();
 
 	

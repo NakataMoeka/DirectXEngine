@@ -63,7 +63,7 @@ void Object3d::PostDraw()
 	Object3d::cmdList = nullptr;
 }
 
-Object3d* Object3d::Create()
+Object3d* Object3d::Create(Model* model)
 {
 
 	Object3d* object3d = new Object3d();
@@ -80,7 +80,9 @@ Object3d* Object3d::Create()
 
 	float scale_val = 20;
 	object3d->scale = { scale_val,scale_val,scale_val };
-
+	if (model) {
+		object3d->LinkModel(model);
+	}
 	return object3d;
 }
 

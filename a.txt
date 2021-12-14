@@ -1,0 +1,7 @@
+自作エンジンに関することのメモ
+
+・depthBufferはヘッダーに書かないとpreDrawで例外スローが起こる。（
+cmdList->OMSetRenderTargets(1, &rtvH, false, &dsvH);あたりで）
+
+・SpriteのコンストラクタはSpriteCreate(main殴り書きしてた時の関数)
+の上部に書いてあったこと(テクスチャ番号をコピー等)を書く。

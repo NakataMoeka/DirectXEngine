@@ -82,13 +82,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	// 3Dオブジェクト生成
+	object3d = Object3d::Create();
 	model = model->Create("bullet");
-	object3d = Object3d::Create(model);
-
+	object3d->LinkModel(model);
+	
 	object3d->Update();
 
+	object3d2 = Object3d::Create();
 	model2 = model2->Create("bullet");
-	object3d2 = Object3d::Create(model);
+	object3d2->LinkModel(model2);
+	
 
 	object3d2->SetPosition({10.0f, 10.0f, 10.0f});
 	

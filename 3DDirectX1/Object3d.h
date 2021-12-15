@@ -35,7 +35,7 @@ public:
 
 	static void PostDraw();
 
-	static Object3d* Create(Model* model = nullptr);
+	static Object3d* Create();
 
 	static const XMFLOAT3& GetEye() { return eye; }
 

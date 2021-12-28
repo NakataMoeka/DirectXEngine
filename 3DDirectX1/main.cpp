@@ -1,18 +1,4 @@
-﻿#include <Windows.h>
-#include <d3d12.h>
-#include <d3dx12.h>
-#include <dxgi1_6.h>
-#include <vector>
-#include <string>
-#include <DirectXMath.h>
-#include <d3dcompiler.h>
-
-#include <math.h>
-#include<DirectXTex.h>
-#include<wrl.h>
-#include<stdio.h>
-#include<xaudio2.h>
-#include<fstream>
+﻿
 #include"input.h"
 #include"WinApp.h"
 #include"Sprite.h"
@@ -21,21 +7,8 @@
 #include"DebugText.h"
 #include"Object3d.h"
 #include"Model.h"
-#pragma comment(lib, "d3dcompiler.lib")
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
 
-#pragma comment(lib, "xaudio2.lib")
-using namespace DirectX;
-using namespace Microsoft::WRL;
-
-
-
-
-
-
-
-
+#include "GameScene.h"
 
 #pragma region 初期化
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {

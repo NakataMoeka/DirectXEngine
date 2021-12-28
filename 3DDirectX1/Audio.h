@@ -67,6 +67,7 @@ public:
 	bool Initialize();
 
 	void SoundPlayWave(const char* filename,bool LOOP);
+	void StopWave();
 private: //ïœêî
 	ComPtr<IXAudio2> xAudio2;
 	IXAudio2MasteringVoice* masterVoice;

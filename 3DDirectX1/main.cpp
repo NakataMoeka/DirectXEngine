@@ -121,81 +121,27 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	input->Initialize(winapp);
 
 	
-#pragma endregion
-
-	const int constantBufferNum = 128;
 
 
 
-#pragma region 
-
-
-#pragma endregion
-
-
-#pragma endregion
-
-
-#pragma region ポジションなど
-
-	/*XMMATRIX matWorld;
-	matWorld = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(60.0f),
-		(float)window_width / window_height,
-		0.1f, 1000.0f
-	);*/
-
-
-	//ビュー変換行列
-	XMMATRIX matView;
-	XMFLOAT3 up(0, 1, 0);
-	XMFLOAT3 eye(0, 0, -100);
-	XMFLOAT3 target(0, 0, 0);
-	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
-	float angle = 0.0f;
-
-	XMMATRIX matProjection = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(60.0f),
-		(float)WinApp::window_width/ WinApp::window_height,
-		0.1f, 1000.0f
-	);
-
-	//スケーリング
-	//int wallAlive[OBJECT_NUM];
-	//for (int i = 0; i < _countof(wall); i++) {
-	//	wallAlive[i] = { 1 };
-	//}
-
-	int gflag = 0;
-
-	int gbflag = 0;
 
 
 
-	char str[100];
-
-	int frame = 0;
-	int playerSpeed = 2;
-	const float radius1 = 4.0f;
-	const float radius2 = 4.0f;
-
-#pragma endregion
 
 while (true) {
 if (winapp->ProcessMessage()) { break; }
 
 
 		input->update();
+		
+		if (input->TriggerKey(DIK_SPACE)) {
+			audio->StopWave();
+		}
 
-	
-		
-	
-		
-				dxcommon->preDraw();
 // ４．描画コマンドここから
 
 #pragma region 描画
-	
+				dxcommon->preDraw();
 				Object3d::PreDraw(dxcommon->GetCmdList());
 				object3d->Draw();
 				object3d2->Draw();

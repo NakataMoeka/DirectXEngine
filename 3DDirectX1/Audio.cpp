@@ -122,3 +122,8 @@ void Audio::SoundPlayWave(const char* filename,bool LOOP)
 		return;
 	}
 }
+
+void Audio::StopWave()
+{
+	pSourceVoice->Stop();
+}

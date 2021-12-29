@@ -39,15 +39,17 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
 
 	sprite = Sprite::CreateSprite(1, { 10,10 });
 
-	audio->SoundPlayWave("Resources/ショット.wav",true);
+	//audio->SoundPlayWave("Resources/ショット.wav",true);
 	
 }
 
 void GameScene::Update()
 {
-	if (input->TriggerKey(DIK_SPACE)) {
-		audio->StopWave();
-	}
+	XMFLOAT3 playerPosition = object3d->GetPosition();
+	if (input->PushKey(DIK_D)) { playerPosition.x += 1.0f; }
+	if (input->PushKey(DIK_A)) { playerPosition.x -= 1.0f; }
+	object3d->SetPosition(playerPosition);
+	object3d->Update();
 }
 
 void GameScene::Draw()

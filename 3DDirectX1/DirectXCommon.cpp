@@ -69,6 +69,7 @@ void DirectXCommon::postDraw()
 	// コマンドリストの実行
 	ID3D12CommandList* cmdLists[] = { cmdList.Get() }; // コマンドリストの配列
 	cmdQueue->ExecuteCommandLists(1, cmdLists);
+	swapchain->Present(1, 0);
 	// コマンドリストの実行完了を待つ
 	cmdQueue->Signal(fence.Get(), ++fenceVal);
 	if (fence->GetCompletedValue() != fenceVal) {
@@ -81,7 +82,7 @@ void DirectXCommon::postDraw()
 	cmdAllocator->Reset(); // キューをクリア
 	cmdList->Reset(cmdAllocator.Get(), nullptr);  // 再びコマンドリストを貯める準備
 		// バッファをフリップ（裏表の入替え）
-	swapchain->Present(1, 0);
+	
 
 }
 

@@ -8,7 +8,11 @@ GameScene::GameScene()
 GameScene::~GameScene()
 {
 	safe_delete(object3d);
+	safe_delete(object3d2);
+	safe_delete(model);
+	safe_delete(model2);
 	safe_delete(sprite);
+
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
@@ -26,6 +30,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	object3d->LinkModel(model);
 
 	object3d->Update();
+
+	object3d2 = Object3d::Create();
+	model2 = model->Create("duck");
+	object3d2->LinkModel(model2);
+	object3d2->SetRotation({0,180,0});
+	object3d2->SetPosition({ 0,-80,0 });
+	object3d2->Update();
 
 	// デバッグテキスト用テクスチャ読み込み
 	if (!Sprite::LoadTexture(debugTextTexNumber, L"Resources/debugfont.png")) {
@@ -50,12 +61,14 @@ void GameScene::Update()
 	if (input->PushKey(DIK_A)) { playerPosition.x -= 1.0f; }
 	object3d->SetPosition(playerPosition);
 	object3d->Update();
+	object3d2->Update();
 }
 
 void GameScene::Draw()
 {
 	Object3d::PreDraw(dxCommon->GetCmdList());
 	object3d->Draw();
+	object3d2->Draw();
 	Object3d::PostDraw();
 
 
@@ -63,7 +76,7 @@ void GameScene::Draw()
 	sprite->Draw();
 	char str[256];
 
-	debugText.Print("abc", 20, 20, 1.0f);
+	debugText.Print("abcdefg", 20, 20, 5.0f);
 	debugText.DrawAll(dxCommon->GetCmdList());
 	sprite->PostDraw();
 }

@@ -38,12 +38,20 @@ public: // ƒƒ“ƒoŠÖ”
 
 private: // ƒƒ“ƒo•Ï”
 	DirectXCommon* dxCommon = nullptr;
+
 	Input* input = nullptr;
+
 	Audio* audio = nullptr;
+
 	DebugText debugText;
+
 	Sprite* sprite = nullptr;
+
 	Object3d* object3d = nullptr;
 	Model*	model = nullptr;
+
+	Object3d* object3d2 = nullptr;
+	Model* model2 = nullptr;
 
 	const int debugTextTexNumber = 0;
 };

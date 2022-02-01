@@ -57,6 +57,10 @@ public:
 
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
 
+	const XMFLOAT3& GetRotation() { return rotation; }
+
+	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
+
 	// ƒ‚ƒfƒ‹‚Æ‚Ì˜AŒg
 	void LinkModel(Model* model) { this->model = model; };
 

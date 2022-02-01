@@ -59,9 +59,15 @@ void GameScene::Update()
 	XMFLOAT3 playerPosition = object3d->GetPosition();
 	if (input->PushKey(DIK_D)) { playerPosition.x += 1.0f; }
 	if (input->PushKey(DIK_A)) { playerPosition.x -= 1.0f; }
+
+	if (input->PushMouse(0)) {
+		debugText.Print("www", 100, 100, 5.0f);
+	}
+
 	object3d->SetPosition(playerPosition);
 	object3d->Update();
 	object3d2->Update();
+	
 }
 
 void GameScene::Draw()

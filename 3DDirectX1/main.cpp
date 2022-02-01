@@ -39,7 +39,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
 	input = new Input();
 	input->Initialize(winapp);
-
+	input->InitializeMouse(winapp);
 	//ゲームシーンの初期化
 	gameScene = new GameScene();
 	gameScene->Initialize(dxcommon, input, audio);
@@ -50,6 +50,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		if (winapp->ProcessMessage()) { break; }
 			//入力関連の毎フレーム処理
 			input->update();
+			input->updateMouse();
 			//ゲームシーンの毎フレーム処理
 			gameScene->Update();
 			//描画

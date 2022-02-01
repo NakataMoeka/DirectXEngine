@@ -14,17 +14,23 @@ private:
 
 public: 
 	void Initialize(WinApp* winapp);
-
+	void InitializeMouse(WinApp* winapp);
+	
 	void update();
-
+	void updateMouse();
 	bool PushKey(BYTE keyNumber);
-
 	bool TriggerKey(BYTE keyNumber);
-
+	bool PushMouse(int MouseNumber);
+	bool TriggerMouse(int MouseNumber);
 private: // ƒƒ“ƒo•Ï”
 	ComPtr<IDirectInput8> dinput;
 	ComPtr<IDirectInputDevice8> devkeyboard;
 	BYTE key[256] = {};
 	BYTE keyPre[256] = {};
+
+	ComPtr<IDirectInputDevice8> devMouse;
+	DIMOUSESTATE mouse = { 0 };
+	DIMOUSESTATE oldMouse = { 0 };
+
 	WinApp* winapp = nullptr;
 };

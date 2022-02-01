@@ -83,6 +83,7 @@ void GameScene::Draw()
 	char str[256];
 
 	debugText.Print("MauseLeftClick", 100, 20, 3.0f);
+	debugText.Print("Move:AD", 600, 20, 3.0f);
 	debugText.DrawAll(dxCommon->GetCmdList());
 	sprite->PostDraw();
 }

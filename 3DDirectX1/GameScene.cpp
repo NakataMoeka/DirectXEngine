@@ -82,7 +82,7 @@ void GameScene::Draw()
 	sprite->Draw();
 	char str[256];
 
-	debugText.Print("abcdefg", 20, 20, 5.0f);
+	debugText.Print("MauseLeftClick", 100, 20, 3.0f);
 	debugText.DrawAll(dxCommon->GetCmdList());
 	sprite->PostDraw();
 }

@@ -46,11 +46,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	// デバッグテキスト初期化
 	debugText.Initialize(debugTextTexNumber);
 
-	Sprite::LoadTexture(1, L"Resources/bullet.png");
+	Sprite::LoadTexture(1, L"Resources/Arrow.png");
 
 	sprite = Sprite::CreateSprite(1, { 10,10 });
 
-	//audio->SoundPlayWave("Resources/ショット.wav",true);
+	audio->SoundPlayWave("Resources/ショット.wav",true);
 	
 }
 

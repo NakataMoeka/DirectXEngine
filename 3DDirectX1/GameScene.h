@@ -10,7 +10,6 @@
 #include"DebugText.h"
 #include"Object3d.h"
 #include"Model.h"
-#include"Camera.h"
 
 class GameScene 
 {
@@ -45,7 +44,7 @@ private: // ƒƒ“ƒo•Ï”
 	Sprite* sprite = nullptr;
 	Object3d* object3d = nullptr;
 	Model*	model = nullptr;
-	Camera* camera = nullptr;
+
 	const int debugTextTexNumber = 0;
 };
 

@@ -325,7 +325,6 @@ void Object3d::Update()
 	ConstBufferDataB0* constMap = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap);
 		//constMap->color = XMFLOAT4(1, 1, 1, 1);
-	//constMap->mat = matWorld * camera->GetView() * camera->GetProjection();
 		constMap->mat =matWorld * matView * matProjection;
 		constBuffB0->Unmap(0, nullptr);
 	

@@ -46,17 +46,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
 void GameScene::Update()
 {
 	XMFLOAT3 playerPosition = object3d->GetPosition();
-	//if (input->PushKey(DIK_D)) { playerPosition.x += 1.0f; }
-	//if (input->PushKey(DIK_A)) { playerPosition.x -= 1.0f; }
-
-	if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
-	{
-		if (input->PushKey(DIK_W)) { Object3d::CameraMoveVector({ 0.0f,+1.0f,0.0f }); }
-		else if (input->PushKey(DIK_S)) { Object3d::CameraMoveVector({ 0.0f,-1.0f,0.0f }); }
-		if (input->PushKey(DIK_D)) { Object3d::CameraMoveVector({ +1.0f,0.0f,0.0f }); }
-		else if (input->PushKey(DIK_A)) { Object3d::CameraMoveVector({ -1.0f,0.0f,0.0f }); }
-	}
-
+	if (input->PushKey(DIK_D)) { playerPosition.x += 1.0f; }
+	if (input->PushKey(DIK_A)) { playerPosition.x -= 1.0f; }
 	object3d->SetPosition(playerPosition);
 	object3d->Update();
 }

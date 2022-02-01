@@ -6,7 +6,6 @@
 #include <DirectXMath.h>
 #include <d3dx12.h>
 #include "Model.h"
-#include "Camera.h"
 class Object3d
 {
 private: // エイリアス
@@ -109,7 +108,5 @@ private:
 	Object3d* parent = nullptr;
 
 	Model* model = nullptr;
-
-	Camera*camera=nullptr;
 };
 

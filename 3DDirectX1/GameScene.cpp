@@ -38,8 +38,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	object3d = Object3d::Create(model);
 	object3d2 = Object3d::Create(model2);
 	
-	object3d2->SetRotation({ 0,0,0 });
-	object3d2->SetPosition({ 10,0,0 });
+	object3d2->SetRotation({ 0,180,0 });
+	object3d2->SetPosition({ 0,0,0 });
 	object3d->Update();
 
 	object3d2->Update();

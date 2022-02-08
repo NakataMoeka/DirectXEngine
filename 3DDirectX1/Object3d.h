@@ -5,7 +5,10 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <d3dx12.h>
+#include <string>
+
 #include "Model.h"
+#include "Camera.h"
 class Object3d
 {
 private: // エイリアス
@@ -37,23 +40,19 @@ public:
 
 
 
-	static bool StaticInitialize(ID3D12Device* dev, int window_width, int window_height);
+	static void StaticInitialize(ID3D12Device* dev, Camera* camera);
+
+	static void CreateGraphicsPipeline();
+
+	static void SetCamera(Camera* camera) {
+		Object3d::camera = camera;
+	}
 
 	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
 
 	static void PostDraw();
 
-	static Object3d* Create();
-
-	static const XMFLOAT3& GetEye() { return eye; }
-
-	static void SetEye(XMFLOAT3 eye);
-
-	static const XMFLOAT3& GetTarget() { return target; }
-
-	static void SetTarget(XMFLOAT3 target);
-
-	static void CameraMoveVector(XMFLOAT3 move);
+	static Object3d* Create(Model* model);
 
 	bool Initialize();
 
@@ -69,28 +68,21 @@ public:
 
 	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
 
+	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
+
 	// モデルとの連携
-	void LinkModel(Model* model) { this->model = model; };
+	void SetModel(Model* model) { this->model = model; };
+
+	void SetBillboard(bool isBillboard) { this->isBillboard = isBillboard; }
 
 private:
-
-	
-
-	static void InitializeCamera(int window_width, int window_height);
-
-	static bool InitializeGraphicsPipeline();
-
-	static void UpdateViewMatrix();
 
 	// デバイス
 	static ID3D12Device* dev;
 
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList;
-	// ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootsignature;
-	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestate;
+
 	// パイプライン
 	static PipelineSet pipelineSet;
 
@@ -122,5 +114,8 @@ private:
 	Object3d* parent = nullptr;
 
 	Model* model = nullptr;
+
+	// ビルボード
+	bool isBillboard = false;
 };
 

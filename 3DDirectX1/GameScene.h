@@ -9,8 +9,9 @@
 #include"DirectXCommon.h"
 #include"DebugText.h"
 #include"Object3d.h"
+#include "ParticleManager.h"
 #include"Model.h"
-
+#include "DebugCamera.h"
 class GameScene 
 {
 private: 
@@ -35,7 +36,7 @@ public: // ƒƒ“ƒoŠÖ”
 	void Update();
 
 	void Draw();
-
+	void CreateParticles();
 private: // ƒƒ“ƒo•Ï”
 	DirectXCommon* dxCommon = nullptr;
 
@@ -44,6 +45,9 @@ private: // ƒƒ“ƒo•Ï”
 	Audio* audio = nullptr;
 
 	DebugText debugText;
+
+	DebugCamera* camera = nullptr;
+	ParticleManager* particleMan = nullptr;
 
 	Sprite* sprite = nullptr;
 

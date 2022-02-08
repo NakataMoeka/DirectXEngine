@@ -40,7 +40,7 @@ public:
 
 
 
-	static void StaticInitialize(ID3D12Device* dev, Camera* camera);
+	static void StaticInitialize(ID3D12Device* dev, Camera* camera= nullptr);
 
 	static void CreateGraphicsPipeline();
 
@@ -86,18 +86,6 @@ private:
 	// パイプライン
 	static PipelineSet pipelineSet;
 
-	// ビュー行列
-	static XMMATRIX matView;
-	// 射影行列
-	static XMMATRIX matProjection;
-	// 視点座標
-	static XMFLOAT3 eye;
-	// 注視点座標
-	static XMFLOAT3 target;
-	// 上方向ベクトル
-	static XMFLOAT3 up;
-
-
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 
 	// 色
@@ -114,7 +102,8 @@ private:
 	Object3d* parent = nullptr;
 
 	Model* model = nullptr;
-
+	// カメラ
+	static Camera* camera;
 	// ビルボード
 	bool isBillboard = false;
 };

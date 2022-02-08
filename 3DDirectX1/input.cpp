@@ -87,3 +87,11 @@ bool Input::TriggerMouse(int MouseNumber)
 	}
 	return false;
 }
+Input::MouseMove Input::GetMouseMove()
+{
+	MouseMove tmp;
+	tmp.lX = mouse.lX;
+	tmp.lY = mouse.lY;
+	tmp.lZ = mouse.lZ;
+	return tmp;
+}

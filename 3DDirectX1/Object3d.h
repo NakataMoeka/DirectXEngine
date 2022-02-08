@@ -18,7 +18,15 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-
+	
+	// パイプラインセット
+	struct PipelineSet
+	{
+		// ルートシグネチャ
+		ComPtr<ID3D12RootSignature> rootsignature;
+		// パイプラインステートオブジェクト
+		ComPtr<ID3D12PipelineState> pipelinestate;
+	};
 
 	// 定数バッファ用データ構造体
 	struct ConstBufferDataB0
@@ -83,6 +91,8 @@ private:
 	static ComPtr<ID3D12RootSignature> rootsignature;
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> pipelinestate;
+	// パイプライン
+	static PipelineSet pipelineSet;
 
 	// ビュー行列
 	static XMMATRIX matView;

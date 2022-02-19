@@ -43,7 +43,7 @@ void Object3d::CreateGraphicsPipeline()
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/BasicVS.hlsl",  // シェーダファイル名
+		L"Resources/shaders/OBJVS.hlsl",  // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0", // エントリーポイント名、シェーダーモデル指定
@@ -65,7 +65,7 @@ void Object3d::CreateGraphicsPipeline()
 	}
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/BasicPS.hlsl",   // シェーダファイル名
+		L"Resources/shaders/OBJPS.hlsl",   // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0", // エントリーポイント名、シェーダーモデル指定
@@ -240,7 +240,7 @@ bool Object3d::Initialize()
 	return true;
 }
 
-void Object3d::Update()
+void Object3d::Update(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation)
 {
 	assert(camera);
 
@@ -282,7 +282,7 @@ void Object3d::Update()
 	
 }
 
-void Object3d::Draw()
+void Object3d::Draw(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation)
 {
 	// nullptrチェック
 	assert(dev);
@@ -292,7 +292,7 @@ void Object3d::Draw()
 	if (model == nullptr) {
 		return;
 	}
-
+	Update(position, scale, rotation);
 	// パイプラインステートの設定
 	cmdList->SetPipelineState(pipelineSet.pipelinestate.Get());
 	// ルートシグネチャの設定

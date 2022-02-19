@@ -38,12 +38,17 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	object3d = Object3d::Create(model);
 	object3d2 = Object3d::Create(model2);
 	
-	object3d2->SetRotation({ 0,180,0 });
-	object3d2->SetPosition({ 0,0,0 });
-	object3d->Update();
+	//object3d2->SetRotation({ 0,180,0 });
+	//object3d2->SetPosition({ 0,0,0 });
+	//object3d->Update();
 
+<<<<<<< HEAD
 	object3d2->Update();
 	//あああああ
+=======
+	//object3d2->Update();
+
+>>>>>>> 謾ｹ騾荳ｭ
 	// デバッグテキスト用テクスチャ読み込み
 	if (!Sprite::LoadTexture(debugTextTexNumber, L"Resources/debugfont.png")) {
 		assert(0);
@@ -64,7 +69,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
 
 void GameScene::Update()
 {
-	XMFLOAT3 playerPosition = object3d->GetPosition();
+	//XMFLOAT3 playerPosition
 	if (input->PushKey(DIK_D)) { playerPosition.x += 0.5f; }
 	if (input->PushKey(DIK_A)) { playerPosition.x -= 0.5f; }
 
@@ -75,17 +80,17 @@ void GameScene::Update()
 	//CreateParticles();
 	camera->Update();
 	particleMan->Update();
-	object3d->SetPosition(playerPosition);
-	object3d->Update();
-	object3d2->Update();
+	/*object3d->SetPosition(playerPosition);*/
+/*	object3d->Update();
+	object3d2->Update()*/;
 	
 }
 
 void GameScene::Draw()
 {
 	Object3d::PreDraw(dxCommon->GetCmdList());
-	object3d->Draw();
-	object3d2->Draw();
+	object3d->Draw(playerPosition, { 1,1,1 }, {0,0,0});
+	object3d2->Draw({0,0,0}, { 1,1,1 }, { 0,180,0 });
 	Object3d::PostDraw();
 
 

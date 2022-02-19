@@ -33,11 +33,9 @@ public:
 	};
 	Shape();
 
-	static bool StaticInitialize(ID3D12Device* device, Camera* camera);
+	static bool StaticInitialize(ID3D12Device* dev);
 
-	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
 
-	static void PostDraw();
 
 	static Shape* Create();
 
@@ -57,9 +55,7 @@ public:
 
 	static bool InitializeGraphicsPipeline();
 
-	void Update(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 matRot, XMFLOAT4 color);
-
-	void Draw(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 matRot, XMFLOAT4 color);
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 private:
 	static ID3D12Device* dev;					//デバイス

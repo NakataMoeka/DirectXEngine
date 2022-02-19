@@ -5,9 +5,7 @@
 #include <DirectXMath.h>
 #include <d3dx12.h>
 #include "Camera.h"
-/// <summary>
-/// 図形モデル
-/// </summary>
+#include "Mesh.h"
 class Shape
 {
 private: // エイリアス
@@ -20,24 +18,27 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
-	Shape();
+	struct VertexPosNormalUv
+	{
+		XMFLOAT3 pos; // xyz座標
+		XMFLOAT3 normal; // 法線ベクトル
+		XMFLOAT2 uv;  // uv座標
+	};
 
-	void Init(ID3D12Device* dev);
-public://図形モデル
+	// 定数バッファ用データ構造体
+	struct ConstBufferData
+	{
+		XMFLOAT4 color;	// 色 (RGBA)
+		XMMATRIX mat;	// ３Ｄ変換行列
+	};
+	Shape();
 
 	static bool StaticInitialize(ID3D12Device* device, Camera* camera);
 
 	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
 
-	/// <summary>
-	/// 描画後処理
-	/// </summary>
 	static void PostDraw();
 
-	/// <summary>
-	/// 3Dオブジェクト生成
-	/// </summary>
-	/// <returns></returns>
 	static Shape* Create();
 
 	static void CreateTriangularPyramid(const float width, const float height);
@@ -52,13 +53,46 @@ public://図形モデル
 
 	static bool LoadTexture();
 
+	bool Initialize();
+
+	static bool InitializeGraphicsPipeline();
+
 	void Update(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 matRot, XMFLOAT4 color);
 
 	void Draw(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 matRot, XMFLOAT4 color);
 
 private:
 	static ID3D12Device* dev;					//デバイス
+	// デスクリプタサイズ
+	static UINT descriptorHandleIncrementSize;
+	// コマンドリスト
+	static ID3D12GraphicsCommandList* cmdList;
+	// ルートシグネチャ
+	static ComPtr<ID3D12RootSignature> rootsignature;
+	// パイプラインステートオブジェクト
+	static ComPtr<ID3D12PipelineState> pipelinestate;
+	// デスクリプタヒープ
+	static ComPtr<ID3D12DescriptorHeap> descHeap;
+	// 頂点バッファ
+	static ComPtr<ID3D12Resource> vertBuff;
+	// インデックスバッファ
+	static ComPtr<ID3D12Resource> indexBuff;
+	// テクスチャバッファ
+	static ComPtr<ID3D12Resource> texbuff;
+	// シェーダリソースビューのハンドル(CPU)
+	static CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+	// シェーダリソースビューのハンドル(CPU)
+	static CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
 
+	// 頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+	// インデックスバッファビュー
+	D3D12_INDEX_BUFFER_VIEW ibView = {};
+	// 頂点データ配列
+	std::vector < VertexPosNormalUv> vertices;
+	// 頂点インデックス配列
+	// 頂点インデックス配列
+	std::vector<unsigned short> indices;
 	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
 	// 色
 	XMFLOAT4 color = { 1,0,0,1 };

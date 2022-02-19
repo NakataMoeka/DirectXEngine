@@ -89,8 +89,8 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 	Object3d::PreDraw(dxCommon->GetCmdList());
-	object3d->Draw(playerPosition, { 1,1,1 }, {0,0,0});
-	object3d2->Draw({0,0,0}, { 1,1,1 }, { 0,180,0 });
+	object3d->Draw(playerPosition, { 1,1,1 }, {0,0,0}, { 1,0,0,1 });
+	object3d2->Draw({0,0,0}, { 1,1,1 }, { 0,180,0 }, { 1,1,1,1 });
 	Object3d::PostDraw();
 
 

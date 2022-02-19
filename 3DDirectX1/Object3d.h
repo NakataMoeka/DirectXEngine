@@ -34,7 +34,7 @@ public:
 	// 定数バッファ用データ構造体
 	struct ConstBufferDataB0
 	{
-		//XMFLOAT4 color;	// 色 (RGBA)
+		XMFLOAT4 color;	// 色 (RGBA)
 		XMMATRIX mat;	// ３Ｄ変換行列
 	};
 
@@ -56,9 +56,9 @@ public:
 
 	bool Initialize();
 
-	void Update(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation);
+	void Update(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation, XMFLOAT4 color);
 
-	void Draw(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation);
+	void Draw(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation,XMFLOAT4 color);
 
 	//const XMFLOAT3& GetPosition() { return position; }
 
@@ -89,7 +89,7 @@ private:
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 
 	// 色
-	XMFLOAT4 color = { 1,1,1,1 };
+	//XMFLOAT4 color = { 1,0,0,1 };
 	//// ローカルスケール
 	//XMFLOAT3 scale = { 1,1,1 };
 	//// X,Y,Z軸回りのローカル回転角

@@ -240,7 +240,7 @@ bool Object3d::Initialize()
 	return true;
 }
 
-void Object3d::Update(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation)
+void Object3d::Update(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation, XMFLOAT4 color)
 {
 	assert(camera);
 
@@ -278,11 +278,12 @@ void Object3d::Update(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation)
 	ConstBufferDataB0* constMap = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap);
 	constMap->mat = matWorld * matViewProjection;	// 行列の合成
+	constMap->color = color;
 	constBuffB0->Unmap(0, nullptr);
 	
 }
 
-void Object3d::Draw(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation)
+void Object3d::Draw(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation, XMFLOAT4 color)
 {
 	// nullptrチェック
 	assert(dev);
@@ -292,7 +293,7 @@ void Object3d::Draw(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation)
 	if (model == nullptr) {
 		return;
 	}
-	Update(position, scale, rotation);
+	Update(position, scale, rotation,color);
 	// パイプラインステートの設定
 	cmdList->SetPipelineState(pipelineSet.pipelinestate.Get());
 	// ルートシグネチャの設定

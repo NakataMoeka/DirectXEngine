@@ -42,13 +42,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	//object3d2->SetPosition({ 0,0,0 });
 	//object3d->Update();
 
-<<<<<<< HEAD
-	object3d2->Update();
+
+	//object3d2->Update();
 	//あああああ
-=======
+
 	//object3d2->Update();
 
->>>>>>> 謾ｹ騾荳ｭ
+
 	// デバッグテキスト用テクスチャ読み込み
 	if (!Sprite::LoadTexture(debugTextTexNumber, L"Resources/debugfont.png")) {
 		assert(0);

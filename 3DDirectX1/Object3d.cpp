@@ -13,123 +13,28 @@ using namespace Microsoft::WRL;
 using namespace std;
 
 ID3D12Device* Object3d::dev = nullptr;
+
 ID3D12GraphicsCommandList* Object3d::cmdList = nullptr;
-ComPtr<ID3D12RootSignature> Object3d::rootsignature;
-ComPtr<ID3D12PipelineState> Object3d::pipelinestate;
+Object3d::PipelineSet Object3d::pipelineSet;
+Camera* Object3d::camera = nullptr;
 
-XMMATRIX Object3d::matView{};
-XMMATRIX Object3d::matProjection{};
-XMFLOAT3 Object3d::eye = { 0, 0, -200.0f };
-XMFLOAT3 Object3d::target = { 0, 0, 0 };
-XMFLOAT3 Object3d::up = { 0, 1, 0 };
-
-
-bool Object3d::StaticInitialize(ID3D12Device* dev, int window_width, int window_height)
+void Object3d::StaticInitialize(ID3D12Device* dev, Camera* camera)
 {
+	assert(!Object3d::dev);
 	// nullptrチェック
 	assert(dev);
 
 	Object3d::dev = dev;
+	Object3d::camera = camera;
 
+	// グラフィックパイプラインの生成
+	CreateGraphicsPipeline();
 
-
-	// カメラ初期化
-	InitializeCamera(window_width, window_height);
-
-	// パイプライン初期化
-	InitializeGraphicsPipeline();
-
+	// モデルの静的初期化
 	Model::StaticInitialize(dev);
-
-	return true;
 }
 
-void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
-{
-	assert(Object3d::cmdList == nullptr);
-
-	Object3d::cmdList = cmdList;
-
-	cmdList->SetPipelineState(pipelinestate.Get());
-
-	cmdList->SetGraphicsRootSignature(rootsignature.Get());
-
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-}
-
-void Object3d::PostDraw()
-{
-	Object3d::cmdList = nullptr;
-}
-
-Object3d* Object3d::Create()
-{
-
-	Object3d* object3d = new Object3d();
-	if (object3d == nullptr) {
-		return nullptr;
-	}
-
-	// 初期化
-	if (!object3d->Initialize()) {
-		delete object3d;
-		assert(0);
-		return nullptr;
-	}
-
-	float scale_val = 20;
-	object3d->scale = { scale_val,scale_val,scale_val };
-
-	return object3d;
-}
-
-void Object3d::SetEye(XMFLOAT3 eye)
-{
-	Object3d::eye = eye;
-
-	UpdateViewMatrix();
-}
-
-void Object3d::SetTarget(XMFLOAT3 target)
-{
-	Object3d::target = target;
-
-	UpdateViewMatrix();
-}
-
-void Object3d::CameraMoveVector(XMFLOAT3 move)
-{
-	XMFLOAT3 eye_moved = GetEye();
-	XMFLOAT3 target_moved = GetTarget();
-
-	eye_moved.x += move.x;
-	eye_moved.y += move.y;
-	eye_moved.z += move.z;
-
-	target_moved.x += move.x;
-	target_moved.y += move.y;
-	target_moved.z += move.z;
-
-	SetEye(eye_moved);
-	SetTarget(target_moved);
-}
-
-
-
-void Object3d::InitializeCamera(int window_width, int window_height)
-{
-	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
-	float angle = 0.0f;
-
-	matProjection = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(60.0f),
-		(float)window_width /window_height,
-		0.1f, 1000.0f
-	);
-}
-
-bool Object3d::InitializeGraphicsPipeline()
+void Object3d::CreateGraphicsPipeline()
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
@@ -138,7 +43,7 @@ bool Object3d::InitializeGraphicsPipeline()
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/BasicVS.hlsl",  // シェーダファイル名
+		L"Resources/shaders/OBJVS.hlsl",  // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0", // エントリーポイント名、シェーダーモデル指定
@@ -160,7 +65,7 @@ bool Object3d::InitializeGraphicsPipeline()
 	}
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Resources/shaders/BasicPS.hlsl",   // シェーダファイル名
+		L"Resources/shaders/OBJPS.hlsl",   // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0", // エントリーポイント名、シェーダーモデル指定
@@ -264,28 +169,60 @@ bool Object3d::InitializeGraphicsPipeline()
 	// バージョン自動判定のシリアライズ
 	result = D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
 	// ルートシグネチャの生成
-	result = dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootsignature));
+	result = dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&pipelineSet.rootsignature));
 	if (FAILED(result)) {
-		return result;
+		assert(0);
 	}
 
-	gpipeline.pRootSignature = rootsignature.Get();
+	gpipeline.pRootSignature = pipelineSet.rootsignature.Get();
 
 	// グラフィックスパイプラインの生成
-	result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelinestate));
+	result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelineSet.pipelinestate));
 
 	if (FAILED(result)) {
-		return result;
+		assert(0);
 	}
 
-	return true;
+
 }
 
-
-
-void Object3d::UpdateViewMatrix()
+void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
 {
-	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+	// PreDrawとPostDrawがペアで呼ばれていなければエラー
+	assert(Object3d::cmdList == nullptr);
+
+	// コマンドリストをセット
+	Object3d::cmdList = cmdList;
+
+	// プリミティブ形状を設定
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void Object3d::PostDraw()
+{
+	Object3d::cmdList = nullptr;
+}
+
+Object3d* Object3d::Create(Model* model)
+{
+
+	Object3d* object3d = new Object3d();
+	if (object3d == nullptr) {
+		return nullptr;
+	}
+
+	// 初期化
+	if (!object3d->Initialize()) {
+		delete object3d;
+		assert(0);
+		return nullptr;
+	}
+
+	if (model) {
+		object3d->SetModel(model);
+	}
+
+	return object3d;
 }
 
 bool Object3d::Initialize()
@@ -303,8 +240,10 @@ bool Object3d::Initialize()
 	return true;
 }
 
-void Object3d::Update()
+void Object3d::Update(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation, XMFLOAT4 color)
 {
+	assert(camera);
+
 	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
@@ -319,21 +258,49 @@ void Object3d::Update()
 	matWorld *= matRot;
 	matWorld *= matTrans;
 
+	if (isBillboard) {
+		const XMMATRIX& matBillboard = camera->GetBillboardMatrix();
+
+		matWorld = XMMatrixIdentity();
+		matWorld *= matScale; // ワールド行列にスケーリングを反映
+		matWorld *= matRot; // ワールド行列に回転を反映
+		matWorld *= matBillboard;
+		matWorld *= matTrans; // ワールド行列に平行移動を反映
+	}
+
 	if (parent != nullptr) {
 		matWorld *= parent->matWorld;
 	}
+
+	const XMMATRIX& matViewProjection = camera->GetViewProjectionMatrix();
+
+	// 定数バッファへデータ転送
 	ConstBufferDataB0* constMap = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap);
-		//constMap->color = XMFLOAT4(1, 1, 1, 1);
-		constMap->mat =matWorld * matView * matProjection;
-		constBuffB0->Unmap(0, nullptr);
+	constMap->mat = matWorld * matViewProjection;	// 行列の合成
+	constMap->color = color;
+	constBuffB0->Unmap(0, nullptr);
 	
 }
 
-void Object3d::Draw()
+void Object3d::Draw(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation, XMFLOAT4 color)
 {
-	//シェーダリソースビューをセット
+	// nullptrチェック
+	assert(dev);
+	assert(Object3d::cmdList);
+
+	// モデルの割り当てがなければ描画しない
+	if (model == nullptr) {
+		return;
+	}
+	Update(position, scale, rotation,color);
+	// パイプラインステートの設定
+	cmdList->SetPipelineState(pipelineSet.pipelinestate.Get());
+	// ルートシグネチャの設定
+	cmdList->SetGraphicsRootSignature(pipelineSet.rootsignature.Get());
+	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
-	//描画コマンド
+
+	// モデル描画
 	model->Draw(cmdList);
 }

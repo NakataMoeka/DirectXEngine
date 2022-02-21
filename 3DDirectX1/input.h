@@ -13,6 +13,13 @@ private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 public: 
+
+	struct MouseMove {
+		LONG    lX;
+		LONG    lY;
+		LONG    lZ;
+	};
+
 	void Initialize(WinApp* winapp);
 	void InitializeMouse(WinApp* winapp);
 	
@@ -22,6 +29,7 @@ public:
 	bool TriggerKey(BYTE keyNumber);
 	bool PushMouse(int MouseNumber);
 	bool TriggerMouse(int MouseNumber);
+	MouseMove GetMouseMove();
 private: // ƒƒ“ƒo•Ï”
 	ComPtr<IDirectInput8> dinput;
 	ComPtr<IDirectInputDevice8> devkeyboard;
@@ -29,8 +37,8 @@ private: // ƒƒ“ƒo•Ï”
 	BYTE keyPre[256] = {};
 
 	ComPtr<IDirectInputDevice8> devMouse;
-	DIMOUSESTATE mouse = { 0 };
-	DIMOUSESTATE oldMouse = { 0 };
+	DIMOUSESTATE2 mouse = { 0 };
+	DIMOUSESTATE2 oldMouse = { 0 };
 
 	WinApp* winapp = nullptr;
 };

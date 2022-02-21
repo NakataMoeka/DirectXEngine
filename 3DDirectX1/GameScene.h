@@ -9,8 +9,9 @@
 #include"DirectXCommon.h"
 #include"DebugText.h"
 #include"Object3d.h"
+#include "ParticleManager.h"
 #include"Model.h"
-
+#include "DebugCamera.h"
 class GameScene 
 {
 private: 
@@ -35,7 +36,7 @@ public: // メンバ関数
 	void Update();
 
 	void Draw();
-
+	void CreateParticles();
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
 
@@ -44,6 +45,9 @@ private: // メンバ変数
 	Audio* audio = nullptr;
 
 	DebugText debugText;
+
+	DebugCamera* camera = nullptr;
+	ParticleManager* particleMan = nullptr;
 
 	Sprite* sprite = nullptr;
 
@@ -54,6 +58,9 @@ private: // メンバ変数
 	Model* model2 = nullptr;
 
 	const int debugTextTexNumber = 0;
+
+	XMFLOAT3 playerPosition = {0.0f,0.0f,0.0f};
+
 };
 
 

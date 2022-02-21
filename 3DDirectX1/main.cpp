@@ -32,10 +32,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		return 1;
 	}
 
-	if (!Object3d::StaticInitialize(dxcommon->Getdev(), WinApp::window_width, WinApp::window_height)) {
-		assert(0);
-		return 1;
-	}
+	// 3Dオブジェクト静的初期化
+	Object3d::StaticInitialize(dxcommon->Getdev());
 	
 	input = new Input();
 	input->Initialize(winapp);

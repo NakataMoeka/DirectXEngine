@@ -4,9 +4,8 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <d3dx12.h>
-#include "Camera.h"
-#include "Mesh.h"
-class Shape
+#include <string>
+class Model
 {
 private: // エイリアス
 // Microsoft::WRL::を省略
@@ -18,6 +17,7 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
+	// 頂点データ構造体
 	struct VertexPosNormalUv
 	{
 		XMFLOAT3 pos; // xyz座標
@@ -25,83 +25,78 @@ public:
 		XMFLOAT2 uv;  // uv座標
 	};
 
-	// 定数バッファ用データ構造体
-	struct ConstBufferData
+	struct Material
 	{
-		XMFLOAT4 color;	// 色 (RGBA)
-		XMMATRIX mat;	// ３Ｄ変換行列
+		std::string name;
+		XMFLOAT3 ambient;
+		XMFLOAT3 diffuse;
+		XMFLOAT3 specular;
+		float alpha;
+		std::string textureFilename;
+
+		Material() {
+			ambient = { 0.3f,0.3f,0.3f };
+			diffuse = { 0.0f,0.0f,0.0f };
+			specular = { 0.0f,0.0f,0.0f };
+			alpha = 1.0f;
+		}
 	};
-	Shape();
+
+	struct ConstBufferDataB1
+	{
+		XMFLOAT3 ambient;
+		float pad1;
+		XMFLOAT3 diffuse;
+		float pad2;
+		XMFLOAT3 specular;
+		float alpha;
+	};
 
 	static bool StaticInitialize(ID3D12Device* dev);
 
+	Model* Create(const std::string& text);
 
-
-	static Shape* Create();
-
-	static void CreateTriangularPyramid(const float width, const float height);
-	
-	static void CreateRect(const float width, const float height);
-
-	static void CreateCircle(const float r, const int num);
+	bool Initialize(const std::string& text);
+	// 描画
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	static void CreateSquare(const float width, const float height, const float depth);
 
-	static void CreateCylinder(int division, int prizmHeight, int radius);
-
-	static bool LoadTexture();
-
-	bool Initialize();
-
-	static bool InitializeGraphicsPipeline();
-
-	void Draw(ID3D12GraphicsCommandList* cmdList);
-
 private:
-	static ID3D12Device* dev;					//デバイス
+	Material material;
+
+	bool InitializeDescriptorHeap();
+
+	bool LoadTexture(const std::string& directoryPath, const std::string& filename);
+
+
+	// デバイス
+	static ID3D12Device* dev;
 	// デスクリプタサイズ
 	static UINT descriptorHandleIncrementSize;
-	// コマンドリスト
-	static ID3D12GraphicsCommandList* cmdList;
-	// ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootsignature;
-	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestate;
 	// デスクリプタヒープ
-	static ComPtr<ID3D12DescriptorHeap> descHeap;
+	ComPtr<ID3D12DescriptorHeap> descHeap;
 	// 頂点バッファ
-	static ComPtr<ID3D12Resource> vertBuff;
+	ComPtr<ID3D12Resource> vertBuff;
 	// インデックスバッファ
-	static ComPtr<ID3D12Resource> indexBuff;
+	ComPtr<ID3D12Resource> indexBuff;
 	// テクスチャバッファ
-	static ComPtr<ID3D12Resource> texbuff;
+	ComPtr<ID3D12Resource> texbuff;
 	// シェーダリソースビューのハンドル(CPU)
-	static CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
 	// シェーダリソースビューのハンドル(CPU)
-	static CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
 
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+	D3D12_VERTEX_BUFFER_VIEW vbView;
 	// インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView = {};
+	D3D12_INDEX_BUFFER_VIEW ibView;
 	// 頂点データ配列
-	std::vector < VertexPosNormalUv> vertices;
-	// 頂点インデックス配列
+	std::vector<VertexPosNormalUv> vertices;
 	// 頂点インデックス配列
 	std::vector<unsigned short> indices;
-	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
-	// 色
-	XMFLOAT4 color = { 1,0,0,1 };
-	// ローカルスケール
-	XMFLOAT3 scale = { 1,1,1 };
-	// X,Y,Z軸回りのローカル回転角
-	XMFLOAT3 rotation = { 0,0,0 };
-	// ローカル座標
-	XMFLOAT3 position = { 0,0,0 };
-	// ローカルワールド変換行列
-	XMMATRIX matWorld;
-	// 親オブジェクト
-	Shape* parent = nullptr;
+
+
+
+	ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ
 };
-
-

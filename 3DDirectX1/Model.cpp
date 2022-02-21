@@ -139,7 +139,7 @@ bool Model::LoadTexture(const std::string& directoryPath, const std::string& fil
 void Model::CreateModel(const std::string& name)
 {
 	HRESULT result = S_FALSE;
-
+	int index = 0;
 	std::ifstream file;
 	//file.open("Resources/triangle/triangle_mat.obj");
 	const string modelname = name;
@@ -149,6 +149,10 @@ void Model::CreateModel(const std::string& name)
 	if (file.fail()) {
 		assert(0);
 	}
+
+	int indexCountTex = 0;
+
+
 	vector<XMFLOAT3>positions;
 	vector<XMFLOAT3>normals;
 	vector<XMFLOAT2>texcoords;
@@ -164,6 +168,7 @@ void Model::CreateModel(const std::string& name)
 			line_stream >> filename;
 			LoadMaterial(directoryPath, filename);
 		}
+
 		if (key == "v") {
 			//座標読み込み
 			XMFLOAT3 position{};
@@ -192,26 +197,69 @@ void Model::CreateModel(const std::string& name)
 			normals.emplace_back(normal);
 		}
 		if (key == "f") {
+			int faceIndexCount = 0;
 			string index_string;
 			while (getline(line_stream, index_string, ' '))
 			{
 				std::istringstream index_stream(index_string);
 				unsigned short indexPosition, indexNormal, indexTexcoord;
 				index_stream >> indexPosition;
-				index_stream.seekg(1, ios_base::cur);
-				index_stream >> indexTexcoord;
-				index_stream.seekg(1, ios_base::cur);
-				index_stream >> indexNormal;
-				//頂点データの追加
-				VertexPosNormalUv vertex{};
-				vertex.pos = positions[indexPosition - 1];
-				vertex.normal = normals[indexNormal - 1];
-				vertex.uv = texcoords[indexTexcoord - 1];
-				vertices.emplace_back(vertex);
-				//頂点インデックスに追加
-				indices.emplace_back((unsigned short)indices.size());
-				//indices.emplace_back(indexPosition - 1);
+				
+				if (material.textureFilename.size() > 0) {
+					index_stream.seekg(1, ios_base::cur);
+					index_stream >> indexTexcoord;
+					index_stream.seekg(1, ios_base::cur);
+					index_stream >> indexNormal;
+					//頂点データの追加
+					VertexPosNormalUv vertex{};
+					vertex.pos = positions[indexPosition - 1];
+					vertex.normal = normals[indexNormal - 1];
+					vertex.uv = texcoords[indexTexcoord - 1];
+					vertices.emplace_back(vertex);
+				}
+				else {
+					char c;
+					index_stream >> c;
+					// スラッシュ2連続の場合、頂点番号のみ
+					if (c == '/') {
+						// 頂点データの追加
+						VertexPosNormalUv vertex{};
+						vertex.pos = positions[indexPosition - 1];
+						vertex.normal = { 0, 0, 1 };
+						vertex.uv = { 0, 0 };
+						vertices.emplace_back(vertex);
+					}
+					else {
+						index_stream.seekg(-1, ios_base::cur); // 1文字戻る
+						index_stream >> indexTexcoord;
+						index_stream.seekg(1, ios_base::cur); // スラッシュを飛ばす
+						index_stream >> indexNormal;
+						// 頂点データの追加
+						VertexPosNormalUv vertex{};
+						vertex.pos = positions[indexPosition - 1];
+						vertex.normal = normals[indexNormal - 1];
+						vertex.uv = { 0, 0 };
+						vertices.emplace_back(vertex);
+
+					}
+				}
+				// インデックスデータの追加
+				if (faceIndexCount >= 3) {
+					// 四角形ポリゴンの4点目なので、
+					// 四角形の0,1,2,3の内 2,3,0で三角形を構築する
+					indices.emplace_back(indexCountTex - 1);
+					indices.emplace_back(indexCountTex);
+					indices.emplace_back(indexCountTex - 3);
+				}
+				else
+				{
+					indices.emplace_back(indexCountTex);
+				}
+				indexCountTex++;
+				faceIndexCount++;
+
 			}
+
 
 		}
 

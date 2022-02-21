@@ -34,7 +34,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	particleMan = ParticleManager::Create(dxCommon->Getdev(), camera);
 
 	model = model->Create("bullet");
-	model2 = model2->Create("duck");
+	model2 = model2->Create("Player");
 	object3d = Object3d::Create(model);
 	object3d2 = Object3d::Create(model2);
 	

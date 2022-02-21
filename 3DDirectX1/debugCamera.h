@@ -1,7 +1,6 @@
 #pragma once
 #include "Camera.h"
 #include "Input.h"
-#include "DebugCamera.h"
 
 class DebugCamera :
 	public Camera

@@ -54,20 +54,20 @@ public:
 
 	static bool StaticInitialize(ID3D12Device* dev);
 
-	Shape* Create(const std::string& text);
+	Shape* CreateSquare(const float width, const float height, const float depth);
 
-	bool Initialize();
+	bool InitializeSquare(const float width, const float height, const float depth);
 	// 描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	void CreateSquare(const float width, const float height, const float depth);
-
-private:
-	Material material;
-
+	void Square(const float width, const float height, const float depth);
+	
 	bool InitializeDescriptorHeap();
 
 	bool LoadTexture();
+private:
+	Material material;
+
 
 
 	// デバイス

@@ -11,6 +11,8 @@
 //
 //using namespace std;
 //
+//ID3D12Device* Shape::dev = nullptr;
+//UINT Shape::descriptorHandleIncrementSize = 0;
 //
 //bool Shape::StaticInitialize(ID3D12Device* dev)
 //{
@@ -21,111 +23,146 @@
 //
 //	return true;
 //}
+//bool Shape::InitializeDescriptorHeap()
+//{
+//	HRESULT result = S_FALSE;
+//	//設定構造体
+//	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
+//	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+//	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+//	descHeapDesc.NumDescriptors = 1;
 //
+//	result = dev->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeap));
 //
-//void Shape::CreateSquare(const float width, const float height, const float depth)
+//	if (FAILED(result)) {
+//		assert(0);
+//		return false;
+//	}
+//	descriptorHandleIncrementSize = dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+//
+//	return true;
+//}
+//Shape* Shape::CreateSquare(const float width, const float height, const float depth) {
+//	// 3Dオブジェクトのインスタンスを生成
+//	Shape* square = new Shape();
+//	if (square == nullptr)
+//	{
+//		return nullptr;
+//	}
+//
+//	// 初期化
+//	if (!square->InitializeSquare(width, height, depth))
+//	{
+//		delete square;
+//		assert(0);
+//		return nullptr;
+//	}
+//
+//	return square;
+//}
+//void Shape::Square(const float width, const float height, const float depth)
 //{
 //	//前
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { -width / 2,-height / 2,-depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 0.0f,1.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { -width / 2,height / 2,-depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 0.0f,0.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { width / 2,-height / 2,-depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 1.0f,1.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { width / 2,height / 2,-depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 1.0f,0.0f };
 //
 //	//後ろ
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { -width / 2,-height / 2,depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 0.0f,1.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { -width / 2,height / 2,depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 0.0f,0.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { width / 2,-height / 2,depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 1.0f,1.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { width / 2,height / 2,depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 1.0f,0.0f };
 //
 //	//左
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { -width / 2,-height / 2,-depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 0.0f,1.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { -width / 2,-height / 2,depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 0.0f,0.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { -width / 2,height / 2,-depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 1.0f,1.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { -width / 2,height / 2,depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 1.0f,0.0f };
 //
 //
 //	//右
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { width / 2,-height / 2,-depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 0.0f,1.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { width / 2,-height / 2,depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 0.0f,0.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { width / 2,height / 2,-depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 1.0f,1.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { width / 2,height / 2,depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 1.0f,0.0f };
 //
 //
 //	//上
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { -width / 2,-height / 2,depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 0.0f,1.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { -width / 2,-height / 2,-depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 0.0f,0.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { width / 2,-height / 2,depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 1.0f,1.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { width / 2,-height / 2,-depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 1.0f,0.0f };
 //
 //	//下
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { -width / 2,height / 2,depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 0.0f,1.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { -width / 2,height / 2,-depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 0.0f,0.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { width / 2,height / 2,depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 1.0f,1.0f };
 //
-//	vertices.emplace_back(new Shape::VertexPosNormalUv);
+//	vertices.emplace_back(new VertexPosNormalUv);
 //	vertices[vertices.size() - 1].pos = { width / 2,height / 2,-depth / 2 };
 //	vertices[vertices.size() - 1].uv = { 1.0f,0.0f };
 //	//前
@@ -146,7 +183,7 @@
 //	//下
 //	indices.emplace_back(new unsigned short(21)), indices.emplace_back(new unsigned short(20)), indices.emplace_back(new unsigned short(22));
 //	indices.emplace_back(new unsigned short(21)), indices.emplace_back(new unsigned short(22)), indices.emplace_back(new unsigned short(23));
-//	
+//
 //	HRESULT result = S_FALSE;
 //	for (size_t i = 0; i < indices.size() / 3; i++)
 //	{//三角形1つごとに計算していく
@@ -164,7 +201,7 @@
 //
 //		//外積は両方から垂直なベクトル
 //		XMVECTOR normal;
-//		normal= XMVector3Cross(v1, v2);
+//		normal = XMVector3Cross(v1, v2);
 //		//正規化（長さを１にする）
 //		normal = XMVector3Normalize(normal);
 //		//求めた法線を頂点データに代入
@@ -222,14 +259,12 @@
 //
 //	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 //	vbView.SizeInBytes = sizeVB;
-//	vbView.StrideInBytes = sizeof(vertices[0]);
+//	vbView.StrideInBytes = sizeof(VertexPosNormalUv);
 //
 //	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
 //	ibView.Format = DXGI_FORMAT_R16_UINT;
 //	ibView.SizeInBytes = sizeIB;
 //
-//	Initialize();
-//	LoadTexture();
 //}
 //bool Shape::LoadTexture()
 //{
@@ -240,7 +275,7 @@
 //	ScratchImage scratchImg{};
 //
 //	result = LoadFromWICFile(
-//		L"Resources/white.jpg", WIC_FLAGS_NONE,
+//		L"Resources/white.png", WIC_FLAGS_NONE,
 //		&metadata, scratchImg);
 //	if (FAILED(result)) {
 //		return result;
@@ -300,7 +335,8 @@
 //
 //	return true;
 //}
-//bool Shape::Initialize()
+//
+//bool Shape::InitializeSquare(const float width, const float height, const float depth)
 //{
 //
 //	// nullptrチェック
@@ -315,8 +351,9 @@
 //		D3D12_RESOURCE_STATE_GENERIC_READ,
 //		nullptr, IID_PPV_ARGS(&constBuffB1));
 //
-//	
-//
+//	Square(width, height, depth);
+//	InitializeDescriptorHeap();
+//	LoadTexture();
 //	ConstBufferDataB1* constMap1 = nullptr;
 //	result = constBuffB1->Map(0, nullptr, (void**)&constMap1);
 //	constMap1->ambient = material.ambient;

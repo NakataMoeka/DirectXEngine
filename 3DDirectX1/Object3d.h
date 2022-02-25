@@ -108,7 +108,7 @@ private:
 	Object3d* parent = nullptr;
 
 	Model* model = nullptr;
-	//Shape* shape = nullptr;
+	Shape* shape = nullptr;
 	// カメラ
 	static Camera* camera;
 	// ビルボード

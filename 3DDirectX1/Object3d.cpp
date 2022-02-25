@@ -241,7 +241,7 @@ Object3d* Object3d::Create(Model* model)
 //
 //
 //	if (shape) {
-//		object3d->SetModel(shape);
+//		object3d->SetShape(shape);
 //	}
 //	return object3d;
 //}
@@ -311,12 +311,10 @@ void Object3d::Draw(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation, XMFLOA
 	assert(Object3d::cmdList);
 
 	// モデルの割り当てがなければ描画しない
-	if (model == nullptr) {
+	if (model == nullptr/* && shape == nullptr*/) {
 		return;
 	}
-	/*if (shape == nullptr) {
-		return;
-	}*/
+
 	Update(position, scale, rotation,color);
 	// パイプラインステートの設定
 	cmdList->SetPipelineState(pipelineSet.pipelinestate.Get());

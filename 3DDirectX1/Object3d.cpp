@@ -224,6 +224,27 @@ Object3d* Object3d::Create(Model* model)
 
 	return object3d;
 }
+//Object3d* Object3d::CreateShape(Shape* shape)
+//{
+//
+//	Object3d* object3d = new Object3d();
+//	if (object3d == nullptr) {
+//		return nullptr;
+//	}
+//
+//	// 初期化
+//	if (!object3d->Initialize()) {
+//		delete object3d;
+//		assert(0);
+//		return nullptr;
+//	}
+//
+//
+//	if (shape) {
+//		object3d->SetModel(shape);
+//	}
+//	return object3d;
+//}
 
 bool Object3d::Initialize()
 {
@@ -293,6 +314,9 @@ void Object3d::Draw(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation, XMFLOA
 	if (model == nullptr) {
 		return;
 	}
+	/*if (shape == nullptr) {
+		return;
+	}*/
 	Update(position, scale, rotation,color);
 	// パイプラインステートの設定
 	cmdList->SetPipelineState(pipelineSet.pipelinestate.Get());
@@ -303,4 +327,5 @@ void Object3d::Draw(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation, XMFLOA
 
 	// モデル描画
 	model->Draw(cmdList);
+	//shape->Draw(cmdList);
 }

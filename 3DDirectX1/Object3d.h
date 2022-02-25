@@ -8,6 +8,7 @@
 #include <string>
 
 #include "Model.h"
+#include "Shape.h"
 #include "Camera.h"
 class Object3d
 {
@@ -54,6 +55,8 @@ public:
 
 	static Object3d* Create(Model* model);
 
+	//static Object3d* CreateShape(Shape* shape);
+
 	bool Initialize();
 
 	void Update(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation, XMFLOAT4 color);
@@ -72,6 +75,9 @@ public:
 
 	// モデルとの連携
 	void SetModel(Model* model) { this->model = model; };
+
+	//void SetShape(Shape* shape) { this->shape = shape; };
+
 
 	void SetBillboard(bool isBillboard) { this->isBillboard = isBillboard; }
 
@@ -102,6 +108,7 @@ private:
 	Object3d* parent = nullptr;
 
 	Model* model = nullptr;
+	//Shape* shape = nullptr;
 	// カメラ
 	static Camera* camera;
 	// ビルボード

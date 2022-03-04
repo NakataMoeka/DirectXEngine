@@ -38,12 +38,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	object3d = Object3d::Create(model);
 	object3d2 = Object3d::Create(model2);
 	
-	//object3d2->SetRotation({ 0,180,0 });
-	//object3d2->SetPosition({ 0,0,0 });
-	//object3d->Update();
+	object3d2->SetRotation({ 0,180,0 });
+	object3d2->SetPosition({ 0,0,0 });
+	object3d->Update();
 
 
-	//object3d2->Update();
+	object3d2->Update();
 	//‚ ‚ ‚ ‚ ‚ 
 
 	//object3d2->Update();
@@ -80,17 +80,17 @@ void GameScene::Update()
 	//CreateParticles();
 	camera->Update();
 	particleMan->Update();
-	/*object3d->SetPosition(playerPosition);*/
-/*	object3d->Update();
-	object3d2->Update()*/;
+	object3d->SetPosition(playerPosition);
+	object3d->Update();
+	object3d2->Update();
 	
 }
 
 void GameScene::Draw()
 {
 	Object3d::PreDraw(dxCommon->GetCmdList());
-	object3d->Draw(playerPosition, { 1,1,1 }, {0,0,0}, { 1,0,0,1 });
-	object3d2->Draw({0,0,0}, { 1,1,1 }, { 0,180,0 }, { 1,1,1,1 });
+	object3d->Draw();
+	object3d2->Draw();
 	Object3d::PostDraw();
 
 

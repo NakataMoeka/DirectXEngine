@@ -35,7 +35,7 @@ public:
 	// 定数バッファ用データ構造体
 	struct ConstBufferDataB0
 	{
-		XMFLOAT4 color;	// 色 (RGBA)
+		//XMFLOAT4 color;	// 色 (RGBA)
 		XMMATRIX mat;	// ３Ｄ変換行列
 	};
 
@@ -59,19 +59,19 @@ public:
 
 	bool Initialize();
 
-	void Update(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation, XMFLOAT4 color);
+	void Update();
 
-	void Draw(XMFLOAT3 position, XMFLOAT3 scale, XMFLOAT3 rotation,XMFLOAT4 color);
+	void Draw();
 
-	//const XMFLOAT3& GetPosition() { return position; }
+	const XMFLOAT3& GetPosition() { return position; }
 
-	//void SetPosition(XMFLOAT3 position) { this->position = position; }
+	void SetPosition(XMFLOAT3 position) { this->position = position; }
 
-	//const XMFLOAT3& GetRotation() { return rotation; }
+	const XMFLOAT3& GetRotation() { return rotation; }
 
-	//void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
+	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
 
-	//void SetScale(XMFLOAT3 scale) { this->scale = scale; }
+	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
 
 	// モデルとの連携
 	void SetModel(Model* model) { this->model = model; };
@@ -95,13 +95,13 @@ private:
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 
 	// 色
-	//XMFLOAT4 color = { 1,0,0,1 };
-	//// ローカルスケール
-	//XMFLOAT3 scale = { 1,1,1 };
-	//// X,Y,Z軸回りのローカル回転角
-	//XMFLOAT3 rotation = { 0,0,0 };
-	//// ローカル座標
-	//XMFLOAT3 position = { 0,0,0 };
+	XMFLOAT4 color = { 1,0,0,1 };
+	// ローカルスケール
+	XMFLOAT3 scale = { 1,1,1 };
+	// X,Y,Z軸回りのローカル回転角
+	XMFLOAT3 rotation = { 0,0,0 };
+	// ローカル座標
+	XMFLOAT3 position = { 0,0,0 };
 	// ローカルワールド変換行列
 	XMMATRIX matWorld;
 	// 親オブジェクト

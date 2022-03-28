@@ -65,7 +65,7 @@ public:
 		unsigned int bufferSize;
 	};
 	bool Initialize();
-
+	//u
 	void SoundPlayWave(const char* filename,bool LOOP);
 	void StopWave();
 private: //•Ï”
